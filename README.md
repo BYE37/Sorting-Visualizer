@@ -8,7 +8,7 @@ To run this project, you need to have the NumPy and Matplotlib installed
 <h2>Steps:</h2>
 1. Clone this repository
 2. `pip install -r requirements.txt` to install all required dependencies
-3. run main.py
+3. run ```main.py```
 
 The app should run where you can see the GUI
 
