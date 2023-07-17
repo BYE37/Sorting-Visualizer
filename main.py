@@ -3,10 +3,11 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 from matplotlib.widgets import Button
 
-amount_nums = 200
+amount_nums = 50
 # Generate random data, and create global variables shared between all functions
 global arr
 global anim
+anim = None
 arr = np.random.randint(1, 30, amount_nums)
 
 # Bubble sort algorithm
@@ -79,7 +80,6 @@ def merge(arr_copy, start, mid, end):
 
 # Update figure function
 def update_fig(frame, bars):
-    global arr
     arr_sorted = sorted(arr)
     for rect, val in zip(bars, frame):
         rect.set_height(val)
@@ -94,59 +94,46 @@ ax.bar(range(len(arr)), arr, color = "black")
 ax.title.set_text("Unsorted Array")
 
 def bubble_sort_show(event):
-    global arr
     global anim
-    try:
+    if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
-    except:
-        print('animation is not running')
-    finally:
-        ax.clear()
-        bubble_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
-        ax.title.set_text("Bubble Sort")
-        anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bubble_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+    ax.clear()
+    bubble_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
+    ax.title.set_text("Bubble Sort")
+    anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bubble_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
 
 def insertion_sort_show(event):
-    global arr
     global anim
-    try:
+    if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
-    except:
-        print('animation is not running')
-    finally:
-        ax.clear()
-        insertion_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
-        ax.title.set_text("Insertion Sort")
-        anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(insertion_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
-        plt.show()
+
+    ax.clear()
+    insertion_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
+    ax.title.set_text("Insertion Sort")
+    anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(insertion_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+    plt.show()
 
 def merge_sort_show(event):
-    global arr
     global anim
-    try:
+    if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
-    except:
-        print('animation is not running')
-    finally:
-        ax.clear()
-        merge_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
-        ax.title.set_text("Merge Sort")
-        anim = FuncAnimation(fig, update_fig, frames=mergesort(arr.copy(), 0, amount_nums - 1), fargs=(merge_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
-        plt.show()
+
+    ax.clear()
+    merge_sort_bars = ax.bar(range(len(arr)), arr, color = "black")
+    ax.title.set_text("Merge Sort")
+    anim = FuncAnimation(fig, update_fig, frames=mergesort(arr.copy(), 0, amount_nums - 1), fargs=(merge_sort_bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+    plt.show()
 
 def unsorted_array_show(event):
-    global arr
     global anim
-    try:
+    if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
-    except:
-        print('animation is not running')
-    finally:
-        ax.clear()
-        unsorted_array_bars = ax.bar(range(len(arr)), arr, color = "black")
-        ax.title.set_text("Unsorted Array")
-        anim = FuncAnimation(fig, update_fig, frames=[arr], fargs=(unsorted_array_bars,), interval=1, repeat=False, blit=True)
-        plt.show()
+
+    ax.clear()
+    unsorted_array_bars = ax.bar(range(len(arr)), arr, color = "black")
+    ax.title.set_text("Unsorted Array")
+    anim = FuncAnimation(fig, update_fig, frames=[arr], fargs=(unsorted_array_bars,), interval=1, repeat=False, blit=True)
+    plt.show()
 
 def randomize(event):
     global arr
