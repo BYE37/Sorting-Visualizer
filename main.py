@@ -3,7 +3,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 from matplotlib.widgets import Button
 
-amount_nums = 50
+amount_nums = 200
 # Generate random data, and create global variables shared between all functions
 global arr
 global anim
