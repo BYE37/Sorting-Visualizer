@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 from matplotlib.widgets import Button
-from matplotlib.artist import Artist
 
 amount_nums = 50
 # Generate random data, and create global variables shared between all functions
