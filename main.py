@@ -22,7 +22,6 @@ def bubbleSort(arr_copy):
 
 # Insertion sort algorithim
 def insertionSort(arr_copy):
-    arr_copy
     n = len(arr_copy)
     for step in range(1, n):
         key = arr_copy[step]
@@ -35,7 +34,6 @@ def insertionSort(arr_copy):
 
         arr_copy[j + 1] = key
         yield arr_copy.copy()
-    yield arr_copy.copy()
 
 # function to recursively divide the arra
 def mergeSort(arr_copy, start = 0, end = amount_nums - 1):
@@ -76,6 +74,25 @@ def merge(arr_copy, start, mid, end):
         arr_copy[start + i] = merged[i]
         yield arr_copy
 
+# Quick sort implementation
+# quicksort function
+def quickSort(a, l = 0, r = amount_nums - 1):
+    if l >= r:
+        return
+    x = a[l]
+    j = l
+    for i in range(l + 1, r + 1):
+        if a[i] <= x:
+            j += 1
+            a[j], a[i] = a[i], a[j]
+        yield a
+    a[l], a[j]= a[j], a[l]
+    yield a
+ 
+    # yield from statement used to yield
+    # the array after dividing
+    yield from quickSort(a, l, j-1)
+    yield from quickSort(a, j + 1, r)
 
 # Update figure function
 def update_fig(frame, bars):
@@ -84,8 +101,8 @@ def update_fig(frame, bars):
         rect.set_height(val)
 
     if all(frame[i] == arr_sorted[i] for i in range(len(frame) - 1)):
-        for rect in bars:
-            rect.set_color('lime')
+        #set all bars to lime, rerender them
+        bars = ax.bar(range(len(arr)), frame, color = "lime")
 
     return bars
 
@@ -98,22 +115,25 @@ def sort_show(sort_type):
         anim.event_source.stop()
     
     ax.clear()
-    bars = ax.bar(range(len(arr)), arr, color = "red")
     if sort_type == "unsorted":
         #set the color to black
         bars = ax.bar(range(len(arr)), arr, color = "black")
         ax.title.set_text("Unsorted Array")
         anim = FuncAnimation(fig, update_fig, frames=[arr], fargs=(bars,), interval=1, repeat=False, blit=True)
-    elif sort_type == "bubble":
-        ax.title.set_text("Bubble Sort")
-        anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
-    elif sort_type == "insertion":
-        ax.title.set_text("Insertion Sort")
-        anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
-    elif sort_type == "merge":
-        ax.title.set_text("Merge Sort")
-        anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
-    
+    else:
+        bars = ax.bar(range(len(arr)), arr, color = "red")
+        if sort_type == "bubble":
+            ax.title.set_text("Bubble Sort")
+            anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+        elif sort_type == "insertion":
+            ax.title.set_text("Insertion Sort")
+            anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+        elif sort_type == "merge":
+            ax.title.set_text("Merge Sort")
+            anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+        elif sort_type == "quick":
+            ax.title.set_text("Quicksort")
+            anim = FuncAnimation(fig, update_fig, frames=quickSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
     plt.show()
 
 def randomize(event):
@@ -132,24 +152,30 @@ def randomize(event):
 #     anim = FuncAnimation(fig, update_fig, frames=[arr], fargs=(unsorted_array_bars,), interval=1, repeat=False, blit=True)
 #     plt.show()
 
-button_unsorted = plt.axes([0.02, 0.01, 0.15, 0.05])
-button_unsorted_array = Button(button_unsorted, 'Unsorted Array')
+ax_button_unsorted = plt.axes([0.05, 0.01, 0.15, 0.05])
+button_unsorted_array = Button(ax_button_unsorted, 'Unsorted Array', 
+                               hovercolor='lightgray')
 button_unsorted_array.on_clicked(lambda event: sort_show("unsorted"))
 
-button_bubble = plt.axes([0.2, 0.01, 0.15, 0.05])
-button_bubble_sort = Button(button_bubble, 'Bubble Sort')
+ax_button_bubble = plt.axes([0.20, 0.01, 0.15, 0.05])
+button_bubble_sort = Button(ax_button_bubble, 'Bubble Sort')
 button_bubble_sort.on_clicked(lambda event: sort_show("bubble"))
 
-button_insertion = plt.axes([0.4, 0.01, 0.17, 0.05])
-button_insertion_sort = Button(button_insertion, 'Insertion Sort')
+ax_button_insertion = plt.axes([0.35, 0.01, 0.15, 0.05])
+button_insertion_sort = Button(ax_button_insertion, 'Insertion Sort')
 button_insertion_sort.on_clicked(lambda event: sort_show("insertion"))
 
-button_merge = plt.axes([0.6, 0.01, 0.15, 0.05])
-button_merge_sort = Button(button_merge, 'Merge Sort')
+ax_button_merge = plt.axes([0.50, 0.01, 0.15, 0.05])
+button_merge_sort = Button(ax_button_merge, 'Merge Sort')
 button_merge_sort.on_clicked(lambda event: sort_show("merge"))
 
-button_random = plt.axes([0.77, 0.01, 0.15, 0.05])
-button_randomize = Button(button_random, 'Randomize Array')
+ax_button_quick = plt.axes([0.65, 0.01, 0.15, 0.05])
+button_quick_sort = Button(ax_button_quick, 'Quicksort')
+button_quick_sort.on_clicked(lambda event: sort_show("quick"))
+
+
+ax_button_random = plt.axes([0.80, 0.01, 0.15, 0.05])
+button_randomize = Button(ax_button_random, 'Randomize Array')
 button_randomize.on_clicked(randomize)
 
 #to start, run the unsorted_array function (defualt menu)
