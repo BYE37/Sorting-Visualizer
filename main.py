@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 from matplotlib.widgets import Button
+from matplotlib.artist import Artist
 
 amount_nums = 50
 # Generate random data, and create global variables shared between all functions
@@ -11,15 +12,15 @@ arr = np.random.randint(1, 30, amount_nums)
 
 # Bubble sort algorithm
 def bubbleSort(arr_copy):
+    iterations = 0
     n = len(arr_copy)
     for i in range(0, n):
         yield arr_copy.copy()
         for j in range(0, n - i - 1):
             if arr_copy[j] > arr_copy[j + 1]:
                 arr_copy[j], arr_copy[j + 1] = arr_copy[j + 1], arr_copy[j]
+            iterations += 1
             yield arr_copy.copy()
-    yield arr_copy.copy()
-
 # Insertion sort algorithim
 def insertionSort(arr_copy):
     n = len(arr_copy)
@@ -99,21 +100,19 @@ def update_fig(frame, bars):
     arr_sorted = sorted(arr)
     for rect, val in zip(bars, frame):
         rect.set_height(val)
-
     if all(frame[i] == arr_sorted[i] for i in range(len(frame) - 1)):
         #set all bars to lime, rerender them
         bars = ax.bar(range(len(arr)), frame, color = "lime")
-
     return bars
 
 fig, ax = plt.subplots()
-
 #show type of sort
 def sort_show(sort_type):
+    iterations = np.array([0])
     global anim
     if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
-    
+
     ax.clear()
     if sort_type == "unsorted":
         #set the color to black
@@ -141,40 +140,30 @@ def randomize(event):
     arr = np.random.randint(1, 30, amount_nums)
     ax.clear()
     sort_show("unsorted")
-# def unsorted_array_show(event):
-#     global anim
-#     if anim is not None and anim.event_source is not None:
-#         anim.event_source.stop()
-
-#     ax.clear()
-#     unsorted_array_bars = ax.bar(range(len(arr)), arr, color = "black")
-#     ax.title.set_text("Unsorted Array")
-#     anim = FuncAnimation(fig, update_fig, frames=[arr], fargs=(unsorted_array_bars,), interval=1, repeat=False, blit=True)
-#     plt.show()
 
 ax_button_unsorted = plt.axes([0.05, 0.01, 0.15, 0.05])
 button_unsorted_array = Button(ax_button_unsorted, 'Unsorted Array', 
                                hovercolor='lightgray')
 button_unsorted_array.on_clicked(lambda event: sort_show("unsorted"))
 
-ax_button_bubble = plt.axes([0.20, 0.01, 0.15, 0.05])
+ax_button_bubble = plt.axes([0.37, 0.01, 0.15, 0.05])
 button_bubble_sort = Button(ax_button_bubble, 'Bubble Sort')
 button_bubble_sort.on_clicked(lambda event: sort_show("bubble"))
 
-ax_button_insertion = plt.axes([0.35, 0.01, 0.15, 0.05])
+ax_button_insertion = plt.axes([0.52, 0.01, 0.15, 0.05])
 button_insertion_sort = Button(ax_button_insertion, 'Insertion Sort')
 button_insertion_sort.on_clicked(lambda event: sort_show("insertion"))
 
-ax_button_merge = plt.axes([0.50, 0.01, 0.15, 0.05])
+ax_button_merge = plt.axes([0.67, 0.01, 0.15, 0.05])
 button_merge_sort = Button(ax_button_merge, 'Merge Sort')
 button_merge_sort.on_clicked(lambda event: sort_show("merge"))
 
-ax_button_quick = plt.axes([0.65, 0.01, 0.15, 0.05])
+ax_button_quick = plt.axes([0.82, 0.01, 0.15, 0.05])
 button_quick_sort = Button(ax_button_quick, 'Quicksort')
 button_quick_sort.on_clicked(lambda event: sort_show("quick"))
 
 
-ax_button_random = plt.axes([0.80, 0.01, 0.15, 0.05])
+ax_button_random = plt.axes([0.20, 0.01, 0.15, 0.05])
 button_randomize = Button(ax_button_random, 'Randomize Array')
 button_randomize.on_clicked(randomize)
 
