@@ -107,7 +107,6 @@ def update_fig(frame, bars):
 fig, ax = plt.subplots()
 #show type of sort
 def sort_show(sort_type):
-    iterations = np.array([0])
     global anim
     if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
