@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 from matplotlib.widgets import Button
-
+from matplotlib.widgets import TextBox
+global amount_nums
 amount_nums = 50
 # Generate random data, and create global variables shared between all functions
 global arr
@@ -102,11 +103,27 @@ def update_fig(frame, bars):
     if all(frame[i] == arr_sorted[i] for i in range(len(frame) - 1)):
         #set all bars to lime, rerender them
         bars = ax.bar(range(len(arr)), frame, color = "lime")
-    return bars
+    return (*bars,)
+
+def randomize(event):
+    global arr
+    arr = np.random.randint(1, 30, amount_nums)
+    ax.clear()
+    sort_show("unsorted")
+
+def submit(expression):
+    global amount_nums
+    amount_nums = int(expression)
+    randomize(None)
 
 fig, ax = plt.subplots()
+
 #show type of sort
 def sort_show(sort_type):
+    axbox = fig.add_axes([0.20, 0.9, 0.05, 0.05])
+    text_box = TextBox(axbox, "Array Size: ", textalignment="center")
+    text_box.on_submit(submit)
+
     global anim
     if anim is not None and anim.event_source is not None:
         anim.event_source.stop()
@@ -121,23 +138,17 @@ def sort_show(sort_type):
         bars = ax.bar(range(len(arr)), arr, color = "red")
         if sort_type == "bubble":
             ax.title.set_text("Bubble Sort")
-            anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=bubbleSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
         elif sort_type == "insertion":
             ax.title.set_text("Insertion Sort")
-            anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
         elif sort_type == "merge":
             ax.title.set_text("Merge Sort")
-            anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
         elif sort_type == "quick":
             ax.title.set_text("Quicksort")
-            anim = FuncAnimation(fig, update_fig, frames=quickSort(arr.copy()), fargs=(bars,), interval=20, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=quickSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
     plt.show()
-
-def randomize(event):
-    global arr
-    arr = np.random.randint(1, 30, amount_nums)
-    ax.clear()
-    sort_show("unsorted")
 
 ax_button_unsorted = plt.axes([0.05, 0.01, 0.15, 0.05])
 button_unsorted_array = Button(ax_button_unsorted, 'Unsorted Array', 
