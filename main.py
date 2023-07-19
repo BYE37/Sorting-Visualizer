@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.widgets import Button
 from matplotlib.widgets import TextBox
 global amount_nums
-amount_nums = 50
+amount_nums =  50
 # Generate random data, and create global variables shared between all functions
 global arr
 global anim
@@ -21,6 +21,7 @@ def bubbleSort(arr_copy):
                 arr_copy[j], arr_copy[j + 1] = arr_copy[j + 1], arr_copy[j]
             iterations += 1
             yield arr_copy.copy()
+
 # Insertion sort algorithim
 def insertionSort(arr_copy):
     n = len(arr_copy)
@@ -37,7 +38,7 @@ def insertionSort(arr_copy):
         yield arr_copy.copy()
 
 # function to recursively divide the arra
-def mergeSort(arr_copy, start = 0, end = amount_nums - 1):
+def mergeSort(arr_copy, start, end):
     if end <= start:
         return
   
@@ -77,7 +78,7 @@ def merge(arr_copy, start, mid, end):
 
 # Quick sort implementation
 # quicksort function
-def quickSort(a, l = 0, r = amount_nums - 1):
+def quickSort(a, l = 0, r = (amount_nums - 1)):
     if l >= r:
         return
     x = a[l]
@@ -144,10 +145,10 @@ def sort_show(sort_type):
             anim = FuncAnimation(fig, update_fig, frames=insertionSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
         elif sort_type == "merge":
             ax.title.set_text("Merge Sort")
-            anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=mergeSort(arr.copy(), 0, amount_nums - 1), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
         elif sort_type == "quick":
             ax.title.set_text("Quicksort")
-            anim = FuncAnimation(fig, update_fig, frames=quickSort(arr.copy()), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
+            anim = FuncAnimation(fig, update_fig, frames=quickSort(arr.copy(), 0, amount_nums - 1), fargs=(bars,), interval=15, repeat=False, blit=True, save_count=amount_nums)
     plt.show()
 
 ax_button_unsorted = plt.axes([0.05, 0.01, 0.15, 0.05])
